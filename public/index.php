@@ -7,6 +7,10 @@ use Phalcon\Mvc\Router;
 use Phalcon\Http\Request;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Dispatcher;
+use \Linkfire\Assignment\Services\DogService;
+use Phalcon\Mvc\Model\Manager as ModelsManager;
+use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 
 define('APP_PATH', dirname(__DIR__) . '/app');
 
@@ -14,13 +18,15 @@ $loader = new Loader();
 $loader->registerDirs(
     [
         APP_PATH . "/controllers/",
+        APP_PATH . "/services/",
+        APP_PATH . "/models/"
     ]
 );
 
 // Register namespaces
 $loader->registerNamespaces(
     [
-        'Linkfire\Assignment' => APP_PATH,
+        'Linkfire\Assignment' => APP_PATH
     ]
 );
 
@@ -42,6 +48,49 @@ $di->set(
         return $dispatcher;
     }
 );
+
+/** I feel like these belong in their own file */
+$di->set(
+    'dogService',
+    new DogService()
+);
+
+$di->set(
+    'kennelService',
+    new \Linkfire\Assignment\Services\KennelService()
+);
+/**
+$di->set(
+    'modelsManager',
+    function() {
+        return new ModelsManager();
+    }
+);
+
+$di->set(
+    'modelsMetadata',
+    function () {
+        return new Memory();
+    }
+);
+
+
+$di->set(
+    'db',
+    function() {
+        return new DbAdapter(
+            [
+                "host"     => '',
+                "username" => '',
+                "password" => '',
+                "dbname"   => ''
+            ]
+        );
+    }
+);
+ */
+
+
 
 // Registering a Http\Response
 $di->set("response", Response::class);
